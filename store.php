@@ -2,13 +2,11 @@
   require('functions.php');
 
   $res = checkReferer();
-  $res = checkReferer();
-  if($res != 'back'){
+  if($res === 'index') {
     header('location: ./index.php');
-  }elseif($res == 'index'){
+  }elseif($res != 'back'){
     header('location: ./index.php');
   }else{
     header('location: '.$_SERVER['HTTP_REFERER'].'');
   }
-
 ?>

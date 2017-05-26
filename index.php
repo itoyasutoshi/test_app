@@ -9,6 +9,9 @@
 </head>
 <body>
   welcome hello world
+  <form action="store.php" method="post">
+    <button type="submit">ログアウト</button>
+  </form>
   <div>
      <a href="new.php">
        <p>新規作成</p>

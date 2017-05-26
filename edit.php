@@ -7,11 +7,12 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
   <title>編集</title>
 </head>
 <body>
   <?php if(isset($_SESSION['err'])): ?>
-    <p><?php echo $_SESSION['err'] ?></p>
+    <p class="err"><?php echo $_SESSION['err'] ?></p>
   <?php endif; ?>
   <form action="store.php" method="post">
     <input type="hidden" name="token" value="<?php echo h($_SESSION['token']); ?>">

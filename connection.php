@@ -48,11 +48,41 @@
 
   function deleteDb($id) {
     $dbh = connectPdo();
-    $nowTime = date("Y-m-d H:i:s"); 
+    $nowTime = date("Y-m-d H:i:s");
     $sql = 'UPDATE todos SET deleted_at = :deleted_at WHERE id = :id';
     $stmt = $dbh->prepare($sql);
     $stmt->bindParam(':deleted_at', $nowTime);
     $stmt->bindValue(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
   }
+
+  function registDb($data) {
+    $dbh = connectPdo();
+    $sql = 'INSERT INTO users (username, email, password) VALUES (:username, :email, :password)';
+    $stmt = $dbh->prepare($sql);
+    $username = $data['username'];
+    $email = $data['email'];
+    $password = $_POST['password'];
+    $pass = password_hash($password, PASSWORD_DEFAULT);
+    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+    $stmt->bindParam(':password', $pass, PDO::PARAM_STR);
+    $stmt->execute();
+  }
+
+  // function checkLoginDb($data) {
+  //   $dbh = connectPdo();
+  //   $sql = 'SELECT * FROM users WHERE username = ?';
+  //   $password = $data['password'];
+  //   $username = $data['username'];
+  //   $stmt = $dbh->prepare($sql);
+  //   $stmt->execute(array($username));
+  //   $result = $stmt->fetch(PDO::FETCH_ASSOC);
+  //   if(password_verify($pass, $result['password'])) {
+  //     header('location: /index.php');
+  //   }else {
+  //     $_SESSION['login_err'] = 'ユーザーIDあるいはパスワードに誤りがあります';
+  //     header('location: '.$_SERVER['HTTP_REFERER'].'');
+  //   }
+  // }
 ?>

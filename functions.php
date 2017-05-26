@@ -20,25 +20,24 @@
     return true;
   }
 
-  function unsetSession() {
-    if(!empty($_SESSION['err'])) $_SESSION['err'] = '';
-  }
-
   function checkReferer() {
     $httpArr = parse_url($_SERVER['HTTP_REFERER']);
     return $res = transition($httpArr['path']);
   }
-
   function transition($path) {
-    unsetSession(); //追記
+    unsetSession();
     $data = $_POST;
-    if(isset($data['todo'])) $res = validate($data['todo']); // 追記
-    if($path === '/index.php' && $data['type'] === 'delete'){
-      deleteData($data['id']);
+    $err = validate();
+    if($err === null) return 'back';
+    if($path === '/register.php') {
+      regist($data);
       return 'index';
-    }elseif(!$res || !empty($_SESSION['err'])){ // 追記
-      return 'back';  // 追記
-    }elseif($path === '/new.php'){
+    }elseif($path === '/login.php') {
+      checkLogin($data);
+      return 'index';
+    }elseif($path === '/index.php' && $data['type'] === 'delete') {
+      deleteData($data['id']);
+    }elseif($path === '/new.php') {
       create($data);
       return 'index';
     }elseif($path === '/edit.php'){
@@ -46,9 +45,34 @@
       return 'index';
     }
   }
+  // バリデーション
+  function validate() {
+    // エラー
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $pass = $_POST['password'];
+    $todo = $_POST['todo'];
 
-  function validate($data) {
-    return $res = $data != "" ? true : $_SESSION['err'] = '入力がありません';
+    if(isset($_POST['signup']) && empty($_POST['username'])) {
+      $_SESSION['name_err'] = '名前を入力してください';
+    }
+    if(isset($_POST['signup']) && empty($_POST['email'])) {
+      $_SESSION['email_err'] = 'emailを入力してください';
+    }
+    if(isset($_POST['signup']) && empty($_POST['password'])) {
+      $_SESSION['pass_err'] = 'passwordを入力してください';
+    }
+    if(isset($_POST['new']) && empty($_POST['todo'])) {
+      $_SESSION['todo_err'] = '入力してください';
+    }
+    if(!empty($username) || !empty($email) || !empty($pass) || !empty($todo)) return 'error';
+  }
+  // リセット
+  function unsetSession() {
+    $_SESSION['name_err'] = "";
+    $_SESSION['email_err'] = "";
+    $_SESSION['pass_err'] = "";
+    $_SESSION['todo_err'] = "";
   }
 
   function create($data) {
@@ -74,4 +98,11 @@
   function deleteData($id) {
     deleteDb($id);
   }
-?>
+
+  function regist($data) {
+    registDb($data);
+  }
+  // ログイン
+  // function checkLogin($data) {
+  //   checkLoginDb($data);
+  // }
