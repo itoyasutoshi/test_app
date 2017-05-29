@@ -33,7 +33,7 @@
     if($path === '/index.php' && $data['type'] === 'delete'){
       deleteData($data['id']);
       return 'index';
-    }elseif($err === NULL) {
+    }elseif(!empty($err)) {
       return 'back';
     }elseif($path === '/register.php') {
       regist($data);
@@ -53,7 +53,8 @@
   function validate() {
     $error = array();
     // 登録,ログインのエラー文
-    if(isset($_POST['signup']) || isset($_POST['signup']) && empty($_POST['username'])) {
+    $nameEmpty = empty($_POST['username']);
+    if(isset($_POST['signup']) || isset($_POST['login']) && ) {
       $error = $_SESSION['name_err'] = '名前を入力してください';
     }
     if(isset($_POST['signup']) || isset($_POST['login']) && empty($_POST['email'])) {
@@ -67,11 +68,12 @@
     if(isset($_POST['new']) && $todoEmpty || isset($_POST['edit']) && $todoEmpty) {
       $error = $_SESSION['todo_err'] = '入力してください';
     }
+    if(!empty($error)) {
+      return 'error';
+    }
+
     var_dump($error);
     exit;
-    // if(!empty($error)) {
-    //   return 'error';
-    // }
   }
   // リセット
   function unsetSession() {
