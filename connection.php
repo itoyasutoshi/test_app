@@ -43,7 +43,6 @@
     $stmt = $dbh->prepare($sql);
     $stmt->execute(array(':id' => (int)$id));
     $data = $stmt->fetch();
-    return $data['todo'];
   }
 
   function deleteDb($id) {
@@ -62,27 +61,29 @@
     $stmt = $dbh->prepare($sql);
     $username = $data['username'];
     $email = $data['email'];
-    $password = $_POST['password'];
-    $pass = password_hash($password, PASSWORD_DEFAULT);
+    $pass = $data['password'];
+    $hashpass = password_hash($pass, PASSWORD_DEFAULT);
     $stmt->bindParam(':username', $username, PDO::PARAM_STR);
     $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-    $stmt->bindParam(':password', $pass, PDO::PARAM_STR);
+    $stmt->bindParam(':password', $hashpass, PDO::PARAM_STR);
     $stmt->execute();
   }
 
-  // function checkLoginDb($data) {
-  //   $dbh = connectPdo();
-  //   $sql = 'SELECT * FROM users WHERE username = ?';
-  //   $password = $data['password'];
-  //   $username = $data['username'];
-  //   $stmt = $dbh->prepare($sql);
-  //   $stmt->execute(array($username));
-  //   $result = $stmt->fetch(PDO::FETCH_ASSOC);
-  //   if(password_verify($pass, $result['password'])) {
-  //     header('location: /index.php');
-  //   }else {
-  //     $_SESSION['login_err'] = 'ユーザーIDあるいはパスワードに誤りがあります';
-  //     header('location: '.$_SERVER['HTTP_REFERER'].'');
-  //   }
-  // }
+  function checkLoginDb($data) {
+    $dbh = connectPdo();
+    $sql = 'SELECT * FROM users WHERE email = :email';
+    $email = $_POST['email'];
+    $pass = $_POST['password'];
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute(array(':email' => $email));
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if(password_verify($pass, $result['password'])) {
+      header('location: ./index.php');
+      exit;
+    }else{
+      header('location: ./login.php');
+      $_SESSION['login_err'] = "ユーザーIDまたはパスワードに誤りがありあます";
+      exit;
+    }
+  }
 ?>

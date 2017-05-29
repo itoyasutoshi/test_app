@@ -1,5 +1,10 @@
 <?php
   require('functions.php');
+  session_start();
+
+  $data = $_SESSION['username'];
+  var_dump($data);
+  exit;
 ?>
 <!DOCTYPE html>
 <html lang="ja">

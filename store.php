@@ -8,5 +8,6 @@
     header('location: ./index.php');
   }else{
     header('location: '.$_SERVER['HTTP_REFERER'].'');
+    exit;
   }
 ?>
