@@ -2,6 +2,7 @@
   require_once('connection.php');
   session_start();
 
+  // csrf対策
   function h($s) {
     return htmlspecialchars($s, ENT_QUOTES, "UTF-8");
   }
@@ -19,27 +20,32 @@
     }
     return true;
   }
+  // ログインチェック
+  function checkLogin() {
+    if($_SERVER['REQUEST_METHOD'] === 'GET' && !isset($_SESSION['username'])) {
+      var_dump($_SERVER['REQUEST_METHOD']);
+      exit;
+    }
+  }
 
   function checkReferer() {
+    // ログインチェックのためのsession
+    if(isset($_POST['username'])) {
+      $_SESSION['username'] = $_POST['username'];
+    }
     $httpArr = parse_url($_SERVER['HTTP_REFERER']);
     return $res = transition($httpArr['path']);
   }
+
   function transition($path) {
     unsetSession();
     $data = $_POST;
-    $err = validate();
-    var_dump($err);
-    exit;
-    if($path === '/index.php' && $data['type'] === 'delete'){
-      deleteData($data['id']);
-      return 'index';
-    }elseif(!empty($err)) {
-      return 'back';
-    }elseif($path === '/register.php') {
+    validate($data);
+    if($path === '/register.php') {
       regist($data);
       return 'index';
     }elseif($path === '/login.php') {
-      checkLogin($data);
+      login($data);
     }elseif($path === '/new.php') {
       create($data);
       return 'index';
@@ -49,39 +55,36 @@
     }
   }
 
-  // バリデーション
-  function validate() {
-    $error = array();
-    // 登録,ログインのエラー文
-    $nameEmpty = empty($_POST['username']);
-    if(isset($_POST['signup']) || isset($_POST['login']) && ) {
-      $error = $_SESSION['name_err'] = '名前を入力してください';
+  function validate($data) {
+    $errors = [];
+    if(isset($data['username']) && empty($data['username'])) {
+      $errors['name'] = $_SESSION['name_err'] = '名前を入力してください';
     }
-    if(isset($_POST['signup']) || isset($_POST['login']) && empty($_POST['email'])) {
-      $error = $_SESSION['email_err'] = 'emailを入力してください';
+    if(isset($data['email']) && empty($data['email'])) {
+      $errors['email'] = $_SESSION['email_err'] = 'emailを入力してください';
     }
-    if(isset($_POST['signup']) || isset($_POST['login']) && empty($_POST['password'])) {
-      $error = $_SESSION['pass_err'] = 'passwordを入力してください';
+    if(isset($data['password']) && empty($data['password'])) {
+      $errors['pass'] = $_SESSION['pass_err'] = 'パスワードを入力してください';
     }
-    // 編集,新規作成のエラー文
-    $todoEmpty = empty($_POST['todo']);
-    if(isset($_POST['new']) && $todoEmpty || isset($_POST['edit']) && $todoEmpty) {
-      $error = $_SESSION['todo_err'] = '入力してください';
+    if(isset($data['todo']) && empty($data['todo'])) {
+      $errors['todo'] = $_SESSION['todo_err'] = '入力してください';
     }
-    if(!empty($error)) {
-      return 'error';
+    // リダイレクト
+    if(!empty($errors)) {
+      header('location: '.$_SERVER['HTTP_REFERER'].'');
+      exit;
     }
-
-    var_dump($error);
-    exit;
   }
+
   // リセット
   function unsetSession() {
-    $_SESSION['name_err'] = "";
-    $_SESSION['email_err'] = "";
-    $_SESSION['pass_err'] = "";
-    $_SESSION['todo_err'] = "";
-    $_SESSION['login_err'] = "";
+    unset(
+      $_SESSION['name_err'],
+      $_SESSION['email_err'],
+      $_SESSION['pass_err'],
+      $_SESSION['todo_err'],
+      $_SESSION['login_err']
+    );
   }
 
   function create($data) {
@@ -108,10 +111,8 @@
     deleteDb($id);
   }
 
-  function regist($data) {
-    registDb($data);
+  function login($data) {
+    if(!isset($_SESSION['username'])) {
+      header('location: /.login.php');
+    }
   }
-  function checkLogin($data) {
-    checkLoginDb($data);
-  }
-

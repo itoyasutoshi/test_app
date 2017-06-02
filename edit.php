@@ -1,5 +1,8 @@
 <?php
   require_once('functions.php');
+   if($_SERVER['REQUEST_METHOD'] === 'GET') {
+    checkLogin();
+  }
   setToken();
   $data = detail($_GET['id']);
 ?>

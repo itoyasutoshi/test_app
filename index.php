@@ -1,10 +1,6 @@
 <?php
   require('functions.php');
-  session_start();
-
-  $data = $_SESSION['username'];
-  var_dump($data);
-  exit;
+  checkLogin();
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -14,9 +10,6 @@
 </head>
 <body>
   welcome hello world
-  <form action="store.php" method="post">
-    <button type="submit">ログアウト</button>
-  </form>
   <div>
      <a href="new.php">
        <p>新規作成</p>
@@ -47,5 +40,6 @@
         </tr>
       <?php endforeach; ?>
     </table>
+    <a href="logout.php">ログアウトする</a>
   </div>
 </body>

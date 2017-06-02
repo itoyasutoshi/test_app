@@ -4,7 +4,7 @@
 <!DOCTYPE HTML>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
+<meta charset="utf-8">
 <title>login</title>
 <link rel="stylesheet" href="style.css">
 <body>
@@ -12,6 +12,7 @@
 <?php if(!empty($_SESSION['login_err'])): ?>
   <p class="err"><?php echo $_SESSION['login_err'] ?></p>
 <?php endif; ?>
+<!-- フォーム -->
 <form action="store.php" method="post">
   <?php if(!empty($_SESSION['email_err'])): ?>
     <p class="err"><?php echo $_SESSION['email_err'] ?></p>

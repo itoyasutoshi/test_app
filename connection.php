@@ -69,7 +69,7 @@
     $stmt->execute();
   }
 
-  function checkLoginDb($data) {
+  function loginDb($data) {
     $dbh = connectPdo();
     $sql = 'SELECT * FROM users WHERE email = :email';
     $email = $_POST['email'];
@@ -81,8 +81,8 @@
       header('location: ./index.php');
       exit;
     }else{
-      header('location: ./login.php');
       $_SESSION['login_err'] = "ユーザーIDまたはパスワードに誤りがありあます";
+      header('location: ./login.php');
       exit;
     }
   }

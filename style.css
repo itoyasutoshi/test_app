@@ -1,1 +1,5 @@
 .err { color: #ff3d00; }
+.logout_form {
+  display: block;
+  margin-top: 20px;
+}
