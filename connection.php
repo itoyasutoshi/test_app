@@ -1,6 +1,5 @@
 <?php
   require_once('config.php');
-
   function connectPdo() {
     try{
       return new PDO(DSN,DB_USER,DB_PASSWORD);
@@ -55,7 +54,7 @@
     $stmt->execute();
   }
 
-  function registDb($data) {
+  function regist($data) {
     $dbh = connectPdo();
     $sql = 'INSERT INTO users (username, email, password) VALUES (:username, :email, :password)';
     $stmt = $dbh->prepare($sql);
@@ -63,22 +62,34 @@
     $email = $data['email'];
     $pass = $data['password'];
     $hashpass = password_hash($pass, PASSWORD_DEFAULT);
-    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-    $stmt->bindParam(':password', $hashpass, PDO::PARAM_STR);
-    $stmt->execute();
+    emailExists($email);
+    $stmt->execute(array(':username' => $username, ':email' => $email, ':password' => $hashpass));
+  }
+  // アドレス重複チェック
+  function emailExists($email) {
+    $dbh = connectPdo();
+    $sql = 'SELECT email FROM users WHERE email = :email';
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute(array(':email' => $email));
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($result) {
+      $_SESSION['regist_err'] = 'そのメールアドレスはすでに登録されています';
+      header('location: ./register.php');
+      exit;
+    }
   }
 
-  function loginDb($data) {
+  function login($data) {
     $dbh = connectPdo();
     $sql = 'SELECT * FROM users WHERE email = :email';
-    $email = $_POST['email'];
-    $pass = $_POST['password'];
+    $email = $data['email'];
+    $pass = $data['password'];
     $stmt = $dbh->prepare($sql);
     $stmt->execute(array(':email' => $email));
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     if(password_verify($pass, $result['password'])) {
-      header('location: ./index.php');
+      $_SESSION['email'] = $data['email'];
+      header('location: index.php');
       exit;
     }else{
       $_SESSION['login_err'] = "ユーザーIDまたはパスワードに誤りがありあます";

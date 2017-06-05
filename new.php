@@ -1,9 +1,7 @@
 <?php
   require_once('functions.php');
+  checkLogin();
   setToken();
-   if($_SERVER['REQUEST_METHOD'] === 'GET') {
-    checkLogin();
-  }
 ?>
 <!DOCTYPE html>
 <html lang="ja">

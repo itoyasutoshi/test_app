@@ -22,17 +22,13 @@
   }
   // ログインチェック
   function checkLogin() {
-    if($_SERVER['REQUEST_METHOD'] === 'GET' && !isset($_SESSION['username'])) {
-      var_dump($_SERVER['REQUEST_METHOD']);
+    if(!isset($_SESSION['email'])) {
+      header('location: ./login.php');
       exit;
     }
   }
 
   function checkReferer() {
-    // ログインチェックのためのsession
-    if(isset($_POST['username'])) {
-      $_SESSION['username'] = $_POST['username'];
-    }
     $httpArr = parse_url($_SERVER['HTTP_REFERER']);
     return $res = transition($httpArr['path']);
   }
@@ -40,12 +36,16 @@
   function transition($path) {
     unsetSession();
     $data = $_POST;
+    keepValue($data);
     validate($data);
     if($path === '/register.php') {
       regist($data);
       return 'index';
     }elseif($path === '/login.php') {
       login($data);
+    }elseif($path === '/index.php' && $data['type'] === 'delete'){
+      deleteDb($data['id']);
+      return 'index';
     }elseif($path === '/new.php') {
       create($data);
       return 'index';
@@ -53,6 +53,13 @@
       update($data);
       return 'index';
     }
+  }
+
+// エラー時に値を保持する
+  function keepValue($data) {
+    if(isset($data['username'])) $_SESSION['username'] = $data['username'];
+    if(isset($data['email'])) $_SESSION['email'] = $data['email'];
+    if(isset($data['password'])) $_SESSION['pass'] = $data['password'];
   }
 
   function validate($data) {
@@ -63,13 +70,15 @@
     if(isset($data['email']) && empty($data['email'])) {
       $errors['email'] = $_SESSION['email_err'] = 'emailを入力してください';
     }
+    if (!empty($data['email']) && strpos($data['email'], "@") === FALSE){
+      $errors['email'] = $_SESSION['email_err'] = "@マークをつけてください";
+    }
     if(isset($data['password']) && empty($data['password'])) {
       $errors['pass'] = $_SESSION['pass_err'] = 'パスワードを入力してください';
     }
     if(isset($data['todo']) && empty($data['todo'])) {
       $errors['todo'] = $_SESSION['todo_err'] = '入力してください';
     }
-    // リダイレクト
     if(!empty($errors)) {
       header('location: '.$_SERVER['HTTP_REFERER'].'');
       exit;
@@ -83,7 +92,11 @@
       $_SESSION['email_err'],
       $_SESSION['pass_err'],
       $_SESSION['todo_err'],
-      $_SESSION['login_err']
+      $_SESSION['login_err'],
+      $_SESSION['regist_err'],
+      $_SESSION['username'],
+      $_SESSION['email'],
+      $_SESSION['pass']
     );
   }
 
@@ -109,10 +122,4 @@
 
   function deleteData($id) {
     deleteDb($id);
-  }
-
-  function login($data) {
-    if(!isset($_SESSION['username'])) {
-      header('location: /.login.php');
-    }
   }

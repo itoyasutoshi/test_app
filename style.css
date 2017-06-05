@@ -1,5 +1,9 @@
+.title { font-size: 23px; }
 .err { color: #ff3d00; }
-.logout_form {
-  display: block;
-  margin-top: 20px;
+input { padding: 5px; }
+button {
+  padding: 5px;
+  border: #bbb solid 1px;
+  border-radius: 3px;
+  background-color: #fff;
 }
