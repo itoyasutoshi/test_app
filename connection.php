@@ -59,8 +59,8 @@
     $sql = 'INSERT INTO users (username, email, password) VALUES (:username, :email, :password)';
     $stmt = $dbh->prepare($sql);
     $username = $data['username'];
-    $email = $data['email'];
     $pass = $data['password'];
+    $email = $data['email'];
     $hashpass = password_hash($pass, PASSWORD_DEFAULT);
     emailExists($email);
     $stmt->execute(array(':username' => $username, ':email' => $email, ':password' => $hashpass));
@@ -88,7 +88,6 @@
     $stmt->execute(array(':email' => $email));
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     if(password_verify($pass, $result['password'])) {
-      $_SESSION['email'] = $data['email'];
       header('location: index.php');
       exit;
     }else{

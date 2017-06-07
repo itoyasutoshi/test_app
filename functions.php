@@ -2,11 +2,11 @@
   require_once('connection.php');
   session_start();
 
-  // csrf対策
+  // エスケープ
   function h($s) {
     return htmlspecialchars($s, ENT_QUOTES, "UTF-8");
   }
-
+  // csrf対策
   function setToken() {
     $token = sha1(uniqid(mt_rand(), true));
     $_SESSION['token'] = $token;
@@ -16,19 +16,26 @@
     if (empty($_SESSION['token']) || ($_SESSION['token'] != $data)) {
       $_SESSION['err'] = '不正な操作です';
       header('location : '.$_SERVER['HTTP_REFERER'].'');
-      exit();
+      exit;
     }
     return true;
   }
   // ログインチェック
   function checkLogin() {
-    if(!isset($_SESSION['email'])) {
+    if(isset($_SESSION['email']) || isset($_SESSION['delete']) || isset($_SESSION['todo'])) {
+      return true;
+    }else{
       header('location: ./login.php');
       exit;
     }
   }
 
   function checkReferer() {
+    // getでstore.phpに直接来たら
+    if($_SERVER['REQUEST_METHOD'] === 'GET') {
+      header('location: index.php');
+      exit;
+    }
     $httpArr = parse_url($_SERVER['HTTP_REFERER']);
     return $res = transition($httpArr['path']);
   }
@@ -36,7 +43,7 @@
   function transition($path) {
     unsetSession();
     $data = $_POST;
-    keepValue($data);
+    keepSession($data);
     validate($data);
     if($path === '/register.php') {
       regist($data);
@@ -55,13 +62,15 @@
     }
   }
 
-// エラー時に値を保持する
-  function keepValue($data) {
+  // session保持
+  function keepSession($data) {
     if(isset($data['username'])) $_SESSION['username'] = $data['username'];
     if(isset($data['email'])) $_SESSION['email'] = $data['email'];
     if(isset($data['password'])) $_SESSION['pass'] = $data['password'];
+    if(isset($data['type'])) $_SESSION['delete'] = $data['type'];
+    if(isset($data['todo'])) $_SESSION['todo'] = $data['todo'];
   }
-
+  // エラー文
   function validate($data) {
     $errors = [];
     if(isset($data['username']) && empty($data['username'])) {
@@ -96,7 +105,9 @@
       $_SESSION['regist_err'],
       $_SESSION['username'],
       $_SESSION['email'],
-      $_SESSION['pass']
+      $_SESSION['pass'],
+      $_SESSION['todo'],
+      $_SESSION['delete']
     );
   }
 

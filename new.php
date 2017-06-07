@@ -1,5 +1,6 @@
 <?php
   require_once('functions.php');
+  // echo $_SESSION['email'];
   checkLogin();
   setToken();
 ?>
@@ -17,7 +18,7 @@
   <form action="store.php" method="POST">
     <input type="hidden" name="token" value="<?php echo h($_SESSION['token']); ?>">
     <input type="text" name="todo">
-    <input type="submit" name="new" value="作成">
+    <input type="submit" value="作成">
   </form>
   <div>
     <a href="index.php">一覧へもどる</a>
