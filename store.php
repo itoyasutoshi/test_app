@@ -1,6 +1,7 @@
 <?php
   require('functions.php');
   $res = checkReferer();
+
   if($res === 'index') {
     header('location: ./index.php');
     exit;

@@ -20,9 +20,10 @@
     }
     return true;
   }
+
   // ログインチェック
   function checkLogin() {
-    if(isset($_SESSION['email']) || isset($_SESSION['delete']) || isset($_SESSION['todo'])) {
+    if(isset($_SESSION['email'])) {
       return true;
     }else{
       header('location: ./login.php');
@@ -31,17 +32,11 @@
   }
 
   function checkReferer() {
-    // getでstore.phpに直接来たら
-    if($_SERVER['REQUEST_METHOD'] === 'GET') {
-      header('location: index.php');
-      exit;
-    }
     $httpArr = parse_url($_SERVER['HTTP_REFERER']);
     return $res = transition($httpArr['path']);
   }
 
   function transition($path) {
-    unsetSession();
     $data = $_POST;
     keepSession($data);
     validate($data);
@@ -67,11 +62,10 @@
     if(isset($data['username'])) $_SESSION['username'] = $data['username'];
     if(isset($data['email'])) $_SESSION['email'] = $data['email'];
     if(isset($data['password'])) $_SESSION['pass'] = $data['password'];
-    if(isset($data['type'])) $_SESSION['delete'] = $data['type'];
-    if(isset($data['todo'])) $_SESSION['todo'] = $data['todo'];
   }
   // エラー文
   function validate($data) {
+    // リターン
     $errors = [];
     if(isset($data['username']) && empty($data['username'])) {
       $errors['name'] = $_SESSION['name_err'] = '名前を入力してください';
@@ -102,12 +96,10 @@
       $_SESSION['pass_err'],
       $_SESSION['todo_err'],
       $_SESSION['login_err'],
-      $_SESSION['regist_err'],
-      $_SESSION['username'],
-      $_SESSION['email'],
-      $_SESSION['pass'],
-      $_SESSION['todo'],
-      $_SESSION['delete']
+      $_SESSION['regist_err']
+      // $_SESSION['username'],
+      // $_SESSION['email'],
+      // $_SESSION['pass']
     );
   }
 
