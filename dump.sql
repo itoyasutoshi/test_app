@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `todos`
+-- Table structure for table `todo`
 --
 
-DROP TABLE IF EXISTS `todos`;
+DROP TABLE IF EXISTS `todo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `todos` (
+CREATE TABLE `todo` (
   `id` mediumint(9) NOT NULL AUTO_INCREMENT,
   `todo` varchar(30) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -37,9 +37,9 @@ CREATE TABLE `todos` (
 --
 
 LOCK TABLES `todo` WRITE;
-/*!40000 ALTER TABLE `todos` DISABLE KEYS */;
-INSERT INTO `todos` VALUES (51,'todo','2017-05-29 01:58:56','2017-05-29 06:53:34','2017-05-29 06:53:34'),(52,'','2017-05-29 06:19:12','2017-05-29 06:53:34','2017-05-29 06:53:34'),(53,'edit','2017-05-29 06:56:24','2017-05-29 06:56:33',NULL);
-/*!40000 ALTER TABLE `todos` ENABLE KEYS */;
+/*!40000 ALTER TABLE `todo` DISABLE KEYS */;
+INSERT INTO `todo` VALUES (51,'todo','2017-05-29 01:58:56','2017-05-29 06:53:34','2017-05-29 06:53:34'),(52,'','2017-05-29 06:19:12','2017-05-29 06:53:34','2017-05-29 06:53:34'),(53,'edit','2017-05-29 06:56:24','2017-05-29 06:56:33',NULL);
+/*!40000 ALTER TABLE `todo` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -60,13 +60,13 @@ CREATE TABLE `users` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `user`
 --
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (107,'username','email@email','$2y$10$CW3Jqq0BlmXSTlRecuP1C.4Tm1AtxL3jiPCflC39WHGX2qJC4kOmS'),(108,'ito','ito@example.com','$2y$10$RLo19BMscGzb9ICiIAbYqOJ2qqV5TPw9InRINOcbodVgOkWyEmZVq'),(109,'rtyuiop','','$2y$10$RL5g.FCdiOgyiVsmA2mB1OksBZ77hE1kPeZxDpchKUSe8tdvaTWRq'),(110,'','ertyui','$2y$10$HItINp3GzkOorWvet7QDY.xJHeQ032ijPDrVDhM0nXISyCgSktEW.');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (107,'username','email@email','$2y$10$CW3Jqq0BlmXSTlRecuP1C.4Tm1AtxL3jiPCflC39WHGX2qJC4kOmS'),(108,'ito','ito@example.com','$2y$10$RLo19BMscGzb9ICiIAbYqOJ2qqV5TPw9InRINOcbodVgOkWyEmZVq'),(109,'rtyuiop','','$2y$10$RL5g.FCdiOgyiVsmA2mB1OksBZ77hE1kPeZxDpchKUSe8tdvaTWRq'),(110,'','ertyui','$2y$10$HItINp3GzkOorWvet7QDY.xJHeQ032ijPDrVDhM0nXISyCgSktEW.');
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
