@@ -36,7 +36,7 @@ CREATE TABLE `todos` (
 -- Dumping data for table `todos`
 --
 
-LOCK TABLES `todos` WRITE;
+LOCK TABLES `todo` WRITE;
 /*!40000 ALTER TABLE `todos` DISABLE KEYS */;
 INSERT INTO `todos` VALUES (51,'todo','2017-05-29 01:58:56','2017-05-29 06:53:34','2017-05-29 06:53:34'),(52,'','2017-05-29 06:19:12','2017-05-29 06:53:34','2017-05-29 06:53:34'),(53,'edit','2017-05-29 06:56:24','2017-05-29 06:56:33',NULL);
 /*!40000 ALTER TABLE `todos` ENABLE KEYS */;
@@ -46,7 +46,7 @@ UNLOCK TABLES;
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
