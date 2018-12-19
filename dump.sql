@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `todo`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `todo` (
   `id` mediumint(9) NOT NULL AUTO_INCREMENT,
-  `todo` varchar(30) DEFAULT NULL,
+  `body` varchar(30) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` datetime DEFAULT NULL,
